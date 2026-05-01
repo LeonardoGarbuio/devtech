@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre | Devtech Engenharia de Vendas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #070707;
+            --bg-card: #0D0D0D;
+            --primary: #FF6A00;
+            --primary-glow: rgba(255, 106, 0, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-gray: #777;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #FFF;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* FUNDO TÉCNICO COMPACTO */
+        .grid-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.02) 1px, transparent 0),
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 30px 30px, 150px 150px, 150px 150px;
+            mask-image: radial-gradient(circle at center, black, transparent 95%);
+        }
+
+        .data-stream {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.04;
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--primary);
+            z-index: -1;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* =========================================
+           NAV GLASSMORPHISM (SINCRONIZADA COM HOME)
+           ========================================= */
+        header { 
+            padding: 2rem 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            position: fixed; 
+            top: 0; left: 0; right: 0; 
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        
+        header.scrolled {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            pointer-events: auto;
+            width: 95%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2.5rem;
+            position: relative;
+            background: rgba(22, 22, 22, 0); 
+            border: 1px solid transparent;
+            border-radius: 100px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled .nav-container {
+            width: 85%;
+            background: rgba(18, 18, 18, 0.6); 
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+            padding: 0.6rem 2rem;
+        }
+
+        /* EFEITO: O SATÉLITE EM ÓRBITA */
+        .nav-satellite {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        header.scrolled .nav-satellite {
+            opacity: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .mobile-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
+        .mobile-toggle span { width: 25px; height: 2px; background: var(--text-white, #FFF); transition: 0.3s; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background-color: var(--primary); color: #FFF;
+            padding: 0.75rem 1.8rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem;
+            text-decoration: none; border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .btn-primary span { pointer-events: none; }
+        .btn-primary:hover { background-color: var(--primary-hover, #E65C00); box-shadow: 0 0 30px rgba(255, 106, 0, 0.4); }
+
+        .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; color: #FFF; text-decoration: none; }
+        .logo span { color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .mobile-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
+                background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px);
+                flex-direction: column; justify-content: center;
+                transition: 0.4s; z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* =========================================
+           SEÇÕES
+           ========================================= */
+        section {
+            min-height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        section:first-of-type {
+            padding-top: 10rem;
+        }
+
+        /* Hero */
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-tag {
+            font-family: var(--mono);
+            color: var(--primary);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero-desc {
+            color: var(--text-gray);
+            font-size: 1.15rem;
+            max-width: 600px;
+            border-left: 2px solid var(--primary);
+            padding-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Blueprint Section */
+        .blueprint-display {
+            position: relative;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            background: radial-gradient(circle at center, rgba(255, 106, 0, 0.08) 0%, transparent 85%);
+            padding: 1rem;
+            border-radius: 24px;
+        }
+
+        .schematic-svg {
+            width: 100%;
+            opacity: 1;
+            filter: drop-shadow(0 0 50px rgba(255, 106, 0, 0.2));
+            transform: scale(1.15);
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 14px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .hotspot::before {
+            content: "";
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 1px solid var(--primary);
+            opacity: 0.3;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+        }
+
+        .label-box {
+            position: absolute;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--primary);
+            padding: 12px 18px;
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--primary);
+            width: 220px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.4s;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hotspot:hover+.label-box {
+            opacity: 1;
+            transform: translateY(-55px);
+        }
+
+        .label-box strong {
+            display: block;
+            color: #FFF;
+            font-family: 'Inter';
+            font-size: 14px;
+            margin-top: 4px;
+            letter-spacing: 0;
+        }
+
+        /* Manifesto */
+        .manifesto-wrap {
+            max-width: 1000px;
+            padding: 1rem 0;
+        }
+
+        .manifesto-text {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        .manifesto-text span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        /* Terminal Cards */
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .terminal-card {
+            background: #090909;
+            border: 1px solid var(--border);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .terminal-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: #0c0c0c;
+        }
+
+        .terminal-card .id {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: block;
+            letter-spacing: 2px;
+        }
+
+        .terminal-card h4 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .terminal-card p {
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           CTA REFINADO (FIX CENTERING & WIDTH)
+           ========================================= */
+        .cta-section {
+            padding: 4rem 0 10rem 0;
+            text-align: center;
+            align-items: center;
+            /* Garante centralização flex */
+        }
+
+        .btn-launch {
+            background: var(--primary);
+            color: #FFF;
+            padding: 0.8rem 2.2rem;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            display: inline-block;
+            box-shadow: 0 10px 25px rgba(255, 106, 0, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            max-width: 260px;
+            /* Largura reduzida conforme pedido */
+            width: auto;
+            /* Garante que respeita o padding */
+            margin: 0 auto;
+            /* Backup de centralização */
+        }
+
+        .btn-launch:hover {
+            background: #FFF;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1);
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 992px) {
+            .terminal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .blueprint-display {
+                padding: 1rem;
+            }
+
+            .schematic-svg {
+                transform: scale(1);
+            }
+
+            section:first-of-type {
+                padding-top: 8rem;
+            }
+
+            .btn-launch {
+                width: 100%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-layer"></div>
+    <div class="data-stream" id="stream"></div>
+
+    <!-- NAV -->
+    <header id="main-nav">
+        <div class="nav-container" id="nav-container">
+            <!-- O SATÉLITE QUE ORBITA -->
+            <div class="nav-satellite" id="satellite"></div>
+
+            <div class="logo">dev<span>tech</span></div>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">INÍCIO</a>
+                <a href="portfolio.html" class="nav-item">PORTFÓLIO</a>
+                <a href="services.html" class="nav-item">SERVIÇOS</a>
+                <a href="sobre.html" class="nav-item">SOBRE</a>
+                <a href="contato.html" class="nav-item">CONTATO</a>
+            </nav>
+
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-primary magnetic-btn">
+                    <span>Solicitar Site</span>
+                </a>
+                <button class="mobile-toggle" id="menu-btn">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 01: INTRODUÇÃO -->
+        <section class="container">
+            <span class="hero-tag">// MISSION_START</span>
+            <h1 class="hero-title">Engenharia Digital<br>para o seu Lucro.</h1>
+            <div class="hero-desc">
+                <p>Nascemos para eliminar o amadorismo. Onde outros veem apenas design, nós projetamos sistemas de
+                    conversão que funcionam como máquinas.</p>
+            </div>
+        </section>
+
+        <!-- 02: O MANIFESTO -->
+        <section class="container">
+            <div class="manifesto-wrap">
+                <h2 class="manifesto-text">
+                    O seu site deve ser o seu <span>ativo mais lucrativo</span>. Projetamos infraestruturas que vendem
+                    24 horas por dia, sem interrupções.
+                </h2>
+            </div>
+        </section>
+
+        <!-- 03: BLUEPRINT GIGANTE -->
+        <section class="container">
+            <div class="blueprint-display">
+                <svg class="schematic-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:var(--primary);stop-opacity:0.3" />
+                            <stop offset="100%" style="stop-color:var(--primary);stop-opacity:0.05" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="200" cy="100" r="95" fill="none" stroke="var(--primary)" stroke-width="0.2"
+                        stroke-dasharray="4" />
+                    <circle cx="200" cy="100" r="75" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.4" />
+                    <line x1="60" y1="100" x2="340" y2="100" stroke="var(--border)" stroke-width="0.8" />
+                    <line x1="200" y1="10" x2="200" y2="190" stroke="var(--border)" stroke-width="0.8" />
+                    <rect x="170" y="70" width="60" height="60" fill="none" stroke="var(--primary)"
+                        stroke-width="1.2" />
+                    <rect x="180" y="80" width="40" height="40" fill="url(#grad1)" stroke="var(--primary)"
+                        stroke-width="0.4" />
+                    <path d="M170 70 L130 30 M230 70 L270 30 M170 130 L130 170 M230 130 L270 170"
+                        stroke="var(--primary)" stroke-width="0.8" />
+                    <circle cx="200" cy="100" r="5" fill="var(--primary)" />
+                </svg>
+
+                <div class="hotspot" style="top: 15%; left: 30%;"></div>
+                <div class="label-box" style="top: 15%; left: 30%;">
+                    HIGH_TECH_STACK
+                    <strong>Infraestrutura robusta capaz de suportar escala global.</strong>
+                </div>
+
+                <div class="hotspot" style="top: 15%; right: 30%;"></div>
+                <div class="label-box" style="top: 15%; right: 30%;">
+                    UX_PSYCHOLOGY
+                    <strong>Design desenhado para guiar o olhar e fechar a venda.</strong>
+                </div>
+
+                <div class="hotspot" style="bottom: 15%; left: 30%;"></div>
+                <div class="label-box" style="bottom: 15%; left: 30%;">
+                    ULTRA_SPEED
+                    <strong>Carregamento abaixo de 0.8s para retenção total.</strong>
+                </div>
+
+                <div class="hotspot" style="bottom: 15%; right: 30%;"></div>
+                <div class="label-box" style="bottom: 15%; right: 30%;">
+                    ROI_CORE
+                    <strong>Rastreio de dados cirúrgico para campanhas de anúncios.</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04: TERMINAL -->
+        <section class="container">
+            <div class="terminal-grid">
+                <div class="terminal-card">
+                    <span class="id">LOG_01 / ORIGEM</span>
+                    <h4>Fundação</h4>
+                    <p>Unimos o rigor da engenharia ao marketing direto para criar sites que não são apenas "artes", mas
+                        máquinas de faturar.</p>
+                </div>
+                <div class="terminal-card">
+                    <span class="id">LOG_02 / MÉTODO</span>
+                    <h4>Execução</h4>
+                    <p>Validámos o nosso sistema em dezenas de nichos, entregando sempre a melhor performance técnica do
+                        mercado.</p>
+                </div>
+                <div class="terminal-card">
+                    <span class="id">LOG_03 / IMPACTO</span>
+                    <h4>Resultado</h4>
+                    <p>O sucesso do nosso código mede-se pelo seu faturamento. Na Devtech, trabalhamos pela sua
+                        decolagem comercial.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05: CTA REFINADO -->
+        <section class="cta-section container">
+            <h2
+                style="font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; margin-bottom: 2rem; letter-spacing: -2px;">
+                PRONTO PARA DECOLAR?</h2>
+            <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-launch">
+                Configurar Operação
+            </a>
+            <div
+                style="margin-top: 5rem; font-family: var(--mono); font-size: 9px; color: var(--text-gray); opacity: 0.5; letter-spacing: 4px;">
+                © 2024 DEVTECH // ALL SYSTEMS NOMINAL
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainNav = document.getElementById('main-nav');
+            const navContainer = document.getElementById('nav-container');
+            const satellite = document.getElementById('satellite');
+            const stream = document.getElementById('stream');
+            let orbitAngle = 0;
+            let isDocked = false;
+
+            const logs = ["INIT_LINK", "DATA_SYNC", "ROI_ENGINE_ACTIVE", "SPEED_LOAD_98", "PIXEL_ID_SET", "UI_RENDER_OK"];
+            for (let i = 0; i < 45; i++) {
+                const line = document.createElement('div');
+                line.style.marginTop = "6px";
+                line.innerText = logs[Math.floor(Math.random() * logs.length)] + " >> " + Math.random().toString(36).substring(7).toUpperCase();
+                if(stream) stream.appendChild(line);
+            }
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 30) mainNav.classList.add('scrolled');
+                else mainNav.classList.remove('scrolled');
+            });
+
+            function updateSatellite() {
+                if (!isDocked && mainNav.classList.contains('scrolled')) {
+                    const rect = navContainer.getBoundingClientRect();
+                    const rx = rect.width / 2;
+                    const ry = rect.height / 2;
+                    orbitAngle += 0.015;
+                    const x = rx + rx * Math.cos(orbitAngle);
+                    const y = ry + ry * Math.sin(orbitAngle);
+                    satellite.style.left = `${x}px`;
+                    satellite.style.top = `${y}px`;
+                }
+                requestAnimationFrame(updateSatellite);
+            }
+            updateSatellite();
+
+            // Interação do Satélite com os Links
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    isDocked = true;
+                    satellite.style.transition = "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    const itemRect = item.getBoundingClientRect();
+                    const navRect = navContainer.getBoundingClientRect();
+                    const targetX = (itemRect.left + itemRect.width / 2) - navRect.left;
+                    satellite.style.left = `${targetX}px`;
+                    satellite.style.top = `-5px`;
+                    satellite.style.transform = "scale(1.5)";
+                    setTimeout(() => {
+                        satellite.style.transform = "scale(1)";
+                    }, 2000);
+                });
+            });
+
+            // Menu Mobile Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const navLinksContainer = document.querySelector('.nav-links');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    navLinksContainer.classList.toggle('active');
+                });
+            }
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => navLinksContainer.classList.remove('active'));
+            });
+
+            // BOTÕES MAGNÉTICOS
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                const inner = btn.querySelector('span');
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) * 0.4;
+                    const y = (e.clientY - rect.top - rect.height / 2) * 0.4;
+                    btn.style.transform = `translate(${x}px, ${y}px)`;
+                    if(inner) inner.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px)`;
+                    if(inner) inner.style.transform = `translate(0px, 0px)`;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

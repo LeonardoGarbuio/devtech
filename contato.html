@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato | Devtech Engenharia de Vendas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #070707;
+            --bg-card: #0D0D0D;
+            --primary: #FF6A00;
+            --primary-hover: #E65C00;
+            --primary-glow: rgba(255, 106, 0, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-white: #FFFFFF;
+            --text-gray: #A1A1A1;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            cursor: default;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #FFF;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* FUNDO TÉCNICO */
+        .grid-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.02) 1px, transparent 0),
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 30px 30px, 150px 150px, 150px 150px;
+            mask-image: radial-gradient(circle at center, black, transparent 90%);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* =========================================
+           NAV GLASSMORPHISM (SINCRONIZADA COM HOME)
+           ========================================= */
+        header { 
+            padding: 2rem 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            position: fixed; 
+            top: 0; left: 0; right: 0; 
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        
+        header.scrolled {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            pointer-events: auto;
+            width: 95%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2.5rem;
+            position: relative;
+            background: rgba(22, 22, 22, 0); 
+            border: 1px solid transparent;
+            border-radius: 100px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled .nav-container {
+            width: 85%;
+            background: rgba(18, 18, 18, 0.6); 
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+            padding: 0.6rem 2rem;
+        }
+
+        /* EFEITO: O SATÉLITE EM ÓRBITA */
+        .nav-satellite {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        header.scrolled .nav-satellite {
+            opacity: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .mobile-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
+        .mobile-toggle span { width: 25px; height: 2px; background: var(--text-white, #FFF); transition: 0.3s; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background-color: var(--primary); color: #FFF;
+            padding: 0.75rem 1.8rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem;
+            text-decoration: none; border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .btn-primary span { pointer-events: none; }
+        .btn-primary:hover { background-color: var(--primary-hover, #E65C00); box-shadow: 0 0 30px rgba(255, 106, 0, 0.4); }
+
+        .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; color: #FFF; text-decoration: none; }
+        .logo span { color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .mobile-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
+                background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px);
+                flex-direction: column; justify-content: center;
+                transition: 0.4s; z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* =========================================
+           CONTATO HERO
+           ========================================= */
+        .contact-hero {
+            padding-top: 10rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero-tag {
+            font-family: var(--mono);
+            color: var(--primary);
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        /* =========================================
+           GRID DE INTERFACE
+           ========================================= */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            margin-bottom: 8rem;
+            align-items: start;
+        }
+
+        /* FORMULÁRIO TÉCNICO */
+        .form-card {
+            background: #090909;
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: #050505;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #FFF;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.1);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: #FFF;
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 100px;
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+            box-shadow: 0 10px 20px rgba(255, 106, 0, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: #FFF;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* INFO PANEL */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .info-item .tag {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .info-item h4 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .info-item a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .info-item a:hover {
+            color: #FFF;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--text-gray);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .social-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(255, 106, 0, 0.05);
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        @media (max-width: 992px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .contact-hero {
+                padding-top: 8rem;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-layer"></div>
+
+    <!-- NAV -->
+    <header id="main-nav">
+        <div class="nav-container" id="nav-container">
+            <!-- O SATÉLITE QUE ORBITA -->
+            <div class="nav-satellite" id="satellite"></div>
+
+            <div class="logo">dev<span>tech</span></div>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">INÍCIO</a>
+                <a href="portfolio.html" class="nav-item">PORTFÓLIO</a>
+                <a href="services.html" class="nav-item">SERVIÇOS</a>
+                <a href="sobre.html" class="nav-item">SOBRE</a>
+                <a href="contato.html" class="nav-item">CONTATO</a>
+            </nav>
+
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-primary magnetic-btn">
+                    <span>Solicitar Site</span>
+                </a>
+                <button class="mobile-toggle" id="menu-btn">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HERO -->
+        <section class="contact-hero">
+            <span class="hero-tag">// CANAIS_DE_CONTATO</span>
+            <h1 class="hero-title">Entre em contato</h1>
+        </section>
+
+        <!-- GRID PRINCIPAL -->
+        <div class="contact-grid">
+
+            <div class="form-card">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" placeholder="Como podemos chamá-lo?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail Corporativo</label>
+                        <input type="email" placeholder="exemplo@empresa.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Assunto</label>
+                        <select required>
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            <option>Novo Site Profissional</option>
+                            <option>Marketing + Site (Escala)</option>
+                            <option>Gestão de Tráfego</option>
+                            <option>Consultoria Técnica</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensagem ou Detalhes do Projeto</label>
+                        <textarea rows="5" placeholder="Conte-nos brevemente o que precisa..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Enviar Mensagem</button>
+                </form>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-item">
+                    <span class="tag">Canal Direto</span>
+                    <h4>WhatsApp</h4>
+                    <p>Resposta imediata em horário comercial.</p>
+                    <a href="https://wa.me/SEUNUMERO" target="_blank" style="display:block; margin-top:10px;">Iniciar
+                        Conversa →</a>
+                </div>
+
+                <div class="info-item">
+                    <span class="tag">E-mail Corporativo</span>
+                    <h4>E-mail</h4>
+                    <p>Para orçamentos formais e documentos.</p>
+                    <p style="color:white; margin-top:5px; font-weight:700;">contato@devtech.com</p>
+                </div>
+
+                <div class="info-item">
+                    <span class="tag">Redes Sociais</span>
+                    <h4>Conecte-se</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                <rect x="2" y="9" width="4" height="12" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainNav = document.getElementById('main-nav');
+            const navContainer = document.getElementById('nav-container');
+            const satellite = document.getElementById('satellite');
+            let orbitAngle = 0;
+            let isDocked = false;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 30) {
+                    mainNav.classList.add('scrolled');
+                } else {
+                    mainNav.classList.remove('scrolled');
+                }
+            });
+
+            function updateSatellite() {
+                if (!isDocked && mainNav.classList.contains('scrolled')) {
+                    const rect = navContainer.getBoundingClientRect();
+                    const rx = rect.width / 2;
+                    const ry = rect.height / 2;
+
+                    orbitAngle += 0.02;
+                    const x = rx + rx * Math.cos(orbitAngle);
+                    const y = ry + ry * Math.sin(orbitAngle);
+
+                    satellite.style.left = `${x}px`;
+                    satellite.style.top = `${y}px`;
+                }
+                requestAnimationFrame(updateSatellite);
+            }
+            updateSatellite();
+
+            // Interação do Satélite com os Links
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    isDocked = true;
+                    satellite.style.transition = "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    const itemRect = item.getBoundingClientRect();
+                    const navRect = navContainer.getBoundingClientRect();
+                    const targetX = (itemRect.left + itemRect.width / 2) - navRect.left;
+                    satellite.style.left = `${targetX}px`;
+                    satellite.style.top = `-5px`;
+                    satellite.style.transform = "scale(1.5)";
+                    setTimeout(() => {
+                        satellite.style.transform = "scale(1)";
+                    }, 2000);
+                });
+            });
+
+            // Menu Mobile Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const navLinksContainer = document.querySelector('.nav-links');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    navLinksContainer.classList.toggle('active');
+                });
+            }
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => navLinksContainer.classList.remove('active'));
+            });
+
+            // BOTÕES MAGNÉTICOS
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                const inner = btn.querySelector('span');
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) * 0.4;
+                    const y = (e.clientY - rect.top - rect.height / 2) * 0.4;
+                    btn.style.transform = `translate(${x}px, ${y}px)`;
+                    if(inner) inner.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px)`;
+                    if(inner) inner.style.transform = `translate(0px, 0px)`;
+                });
+            });
+
+            // Envio do Formulário (Mockup)
+            document.getElementById('contact-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                btn.innerText = "ENVIANDO...";
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    btn.innerText = "MENSAGEM ENVIADA";
+                    btn.style.background = "#00CC66";
+                    btn.style.boxShadow = "0 10px 20px rgba(0, 204, 102, 0.2)";
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+
+</html>

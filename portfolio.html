@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados | Devtech Engenharia de Vendas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0D0D0D;
+            --bg-card: #161616;
+            --primary: #FF6A00;
+            --primary-hover: #E65C00;
+            --text-white: #FFFFFF;
+            --text-gray: #A1A1A1;
+            --border: #2A2A2A;
+            --accent-green: #00FF88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            cursor: default;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeito de grão/ruído premium */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================================
+           NAV GLASSMORPHISM (SINCRONIZADA COM HOME)
+           ========================================= */
+        header {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        header.scrolled {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            pointer-events: auto;
+            width: 95%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2.5rem;
+            position: relative;
+            background: rgba(22, 22, 22, 0); 
+            border: 1px solid transparent;
+            border-radius: 100px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled .nav-container {
+            width: 85%;
+            background: rgba(18, 18, 18, 0.6); 
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+            padding: 0.6rem 2rem;
+        }
+
+        .nav-satellite {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        header.scrolled .nav-satellite {
+            opacity: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .mobile-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
+        .mobile-toggle span { width: 25px; height: 2px; background: var(--text-white, #FFF); transition: 0.3s; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background-color: var(--primary); color: #FFF;
+            padding: 0.75rem 1.8rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem;
+            text-decoration: none; border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .btn-primary span { pointer-events: none; }
+        .btn-primary:hover { background-color: var(--primary-hover, #E65C00); box-shadow: 0 0 30px rgba(255, 106, 0, 0.4); }
+
+        .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; color: #FFF; text-decoration: none; }
+        .logo span { color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .mobile-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
+                background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px);
+                flex-direction: column; justify-content: center;
+                transition: 0.4s; z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .portfolio-hero {
+            padding: 12rem 0 5rem 0;
+            text-align: center;
+        }
+
+        .hero-label {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .portfolio-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .portfolio-hero p {
+            color: var(--text-gray);
+            max-width: 650px;
+            margin: 0 auto;
+            font-size: 1.15rem;
+        }
+
+        /* =========================================
+           GRELHA DE RESULTADOS (LAYOUT EM Z)
+           ========================================= */
+        .results-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8rem;
+            padding-bottom: 10rem;
+            margin-top: 4rem;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .project-row:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project-row:nth-child(even) .project-info {
+            direction: ltr;
+        }
+
+        .project-visual {
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .project-visual:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .mockup-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+        }
+
+        .metric-badge {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            font-size: 0.85rem;
+            font-weight: 800;
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .project-info h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            letter-spacing: -1px;
+        }
+
+        .project-tag {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .project-description {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-box .val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-white);
+            margin-bottom: 2px;
+        }
+
+        .stat-box .lab {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .btn-case {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 2.2rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-white);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .btn-case:hover {
+            border-color: var(--primary);
+            background: rgba(255, 106, 0, 0.05);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .testimonial {
+            border-left: 3px solid var(--primary);
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            margin-top: 3rem;
+            font-style: italic;
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 992px) {
+            .project-row {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .portfolio-hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .project-row:nth-child(even) {
+                direction: ltr;
+            }
+
+            .stats-group {
+                gap: 1.5rem;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <header id="main-nav">
+        <div class="nav-container" id="nav-container">
+            <!-- O SATÉLITE QUE ORBITA -->
+            <div class="nav-satellite" id="satellite"></div>
+
+            <div class="logo">dev<span>tech</span></div>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">INÍCIO</a>
+                <a href="portfolio.html" class="nav-item">PORTFÓLIO</a>
+                <a href="services.html" class="nav-item">SERVIÇOS</a>
+                <a href="sobre.html" class="nav-item">SOBRE</a>
+                <a href="contato.html" class="nav-item">CONTATO</a>
+            </nav>
+
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="https://wa.me/SEUNUMERO" target="_blank" class="btn-primary magnetic-btn">
+                    <span>Solicitar Site</span>
+                </a>
+                <button class="mobile-toggle" id="menu-btn">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SECCÃO HERO -->
+        <section class="portfolio-hero">
+            <span class="hero-label">Engenharia de Resultados</span>
+            <h1>Projetos que dominam<br>o <span style="color:var(--primary)">mercado digital.</span></h1>
+            <p>Criamos ativos digitais que transformam visitantes anónimos em clientes qualificados através de design
+                estratégico e performance extrema.</p>
+        </section>
+
+        <!-- LISTA DE MISSÕES -->
+        <div class="results-grid">
+
+            <!-- CASO 01 -->
+            <div class="project-row">
+                <div class="project-visual">
+                    <div class="metric-badge">ROI 12.4x</div>
+                    <div class="mockup-placeholder">
+                        <!--  -->
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                            stroke-width="1" opacity="0.3">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">IMOBILIÁRIO DE ALTO PADRÃO</span>
+                    <h2>Horizon Estates</h2>
+                    <p class="project-description">
+                        Implementámos uma interface de imersão focada em investidores internacionais. Eliminámos as
+                        barreiras de conversão no agendamento de visitas e elevámos a percepção de valor dos imóveis.
+                    </p>
+                    <div class="stats-group">
+                        <div class="stat-box">
+                            <span class="val">+85%</span>
+                            <span class="lab">Leads Qualificados</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="val">0.3s</span>
+                            <span class="lab">Velocidade (LCP)</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-case">Explorar Projeto <span>→</span></a>
+                    <div class="testimonial">
+                        "A Devtech não fez apenas um site, construiu o nosso canal de vendas mais lucrativo em apenas 3
+                        meses."
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASO 02 -->
+            <div class="project-row">
+                <div class="project-visual">
+                    <div class="metric-badge">+42% Conversão</div>
+                    <div class="mockup-placeholder">
+                        <!--  -->
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                            stroke-width="1" opacity="0.3">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">SAÚDE & BEM-ESTAR</span>
+                    <h2>Clínica Vitality</h2>
+                    <p class="project-description">
+                        Redesenhámos o funil de agendamento clínico para ser 100% focado no utilizador mobile. O sistema
+                        filtra automaticamente os Leads, entregando ao WhatsApp apenas clientes prontos para fechar.
+                    </p>
+                    <div class="stats-group">
+                        <div class="stat-box">
+                            <span class="val">420/mês</span>
+                            <span class="lab">Agendamentos</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="val">98%</span>
+                            <span class="lab">Mobile Score</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-case">Explorar Projeto <span>→</span></a>
+                </div>
+            </div>
+
+            <!-- CASO 03 -->
+            <div class="project-row">
+                <div class="project-visual">
+                    <div class="metric-badge">Custo p/ Lead -60%</div>
+                    <div class="mockup-placeholder">
+                        <!--  -->
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                            stroke-width="1" opacity="0.3">
+                            <circle cx="12" cy="12" r="10" />
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            <path d="M2 12h20" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">E-COMMERCE PREMIUM</span>
+                    <h2>Aura Fashion</h2>
+                    <p class="project-description">
+                        Desenvolvimento de uma arquitetura de e-commerce "headless" para performance máxima. Focámos na
+                        redução do abandono de carrinho e na otimização da jornada de compra em dispositivos móveis.
+                    </p>
+                    <div class="stats-group">
+                        <div class="stat-box">
+                            <span class="val">+130%</span>
+                            <span class="lab">Vendas Totais</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="val">0.5s</span>
+                            <span class="lab">Checkout Time</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-case">Explorar Projeto <span>→</span></a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainNav = document.getElementById('main-nav');
+            const navContainer = document.getElementById('nav-container');
+            const satellite = document.getElementById('satellite');
+            let orbitAngle = 0;
+            let isDocked = false;
+
+            // Nav dinámica no scroll
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 30) mainNav.classList.add('scrolled');
+                else mainNav.classList.remove('scrolled');
+            });
+
+            // Lógica do Satélite (Órbita)
+            function updateSatellite() {
+                if (!isDocked && mainNav.classList.contains('scrolled')) {
+                    const rect = navContainer.getBoundingClientRect();
+                    const rx = rect.width / 2;
+                    const ry = rect.height / 2;
+                    orbitAngle += 0.02;
+                    const x = rx + rx * Math.cos(orbitAngle);
+                    const y = ry + ry * Math.sin(orbitAngle);
+                    satellite.style.left = `${x}px`;
+                    satellite.style.top = `${y}px`;
+                }
+                requestAnimationFrame(updateSatellite);
+            }
+            updateSatellite();
+
+            // Interação do Satélite com os Links
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    isDocked = true;
+                    satellite.style.transition = "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    const itemRect = item.getBoundingClientRect();
+                    const navRect = navContainer.getBoundingClientRect();
+                    const targetX = (itemRect.left + itemRect.width / 2) - navRect.left;
+                    satellite.style.left = `${targetX}px`;
+                    satellite.style.top = `-5px`;
+                    satellite.style.transform = "scale(1.5)";
+                    setTimeout(() => {
+                        satellite.style.transform = "scale(1)";
+                    }, 2000);
+                });
+            });
+
+            // Menu Mobile Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const navLinksContainer = document.querySelector('.nav-links');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', () => {
+                    navLinksContainer.classList.toggle('active');
+                });
+            }
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => navLinksContainer.classList.remove('active'));
+            });
+
+            // BOTÕES MAGNÉTICOS
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                const inner = btn.querySelector('span');
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) * 0.4;
+                    const y = (e.clientY - rect.top - rect.height / 2) * 0.4;
+                    btn.style.transform = `translate(${x}px, ${y}px)`;
+                    if(inner) inner.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px)`;
+                    if(inner) inner.style.transform = `translate(0px, 0px)`;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
